@@ -204,6 +204,8 @@ def main():
     args = parser.parse_args()
 
     if args.mode == "webui":
+         proc = start_rclone_rcd()
+         proc.communicate()
         start_rclone_rcd().wait()
     elif args.mode == "bot":
         asyncio.run(run_bot())

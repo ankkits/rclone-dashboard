@@ -13,5 +13,5 @@ unzip -j /tmp/rclone.zip "rclone-*-linux-amd64/rclone" -d bin
 # Make it executable
 chmod +x bin/rclone
 
-# Start the python app
-python app.py
+# Start the python app in webui mode (important for Render)
+python app.py --mode webui

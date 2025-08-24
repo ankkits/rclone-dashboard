@@ -1,0 +1,42 @@
+# Render Blueprint: deploys two services on the Free plan
+# 1) Web Service: rclone WebUI (auth via RCLONE_USER/RCLONE_PASS)
+# 2) Background Worker: Telegram bot that uploads files to the union remote
+services:
+  - type: web
+    name: rclone-webui
+    env: python
+    plan: free
+    buildCommand: bash scripts/setup.sh && pip install -r requirements.txt
+    startCommand: python app.py --mode webui
+    autoDeploy: true
+    envVars:
+      - key: RCLONE_USER
+        value: admin
+      - key: RCLONE_PASS
+        generateValue: true
+      - key: RCLONE_DEST
+        value: free_union:/telegram
+      - key: RCLONE_CONFIG_CONTENT
+        sync: false  # paste your rclone.conf content as the value in the dashboard
+  - type: worker
+    name: telegram-bot-worker
+    env: python
+    plan: free
+    buildCommand: bash scripts/setup.sh && pip install -r requirements.txt
+    startCommand: python app.py --mode bot
+    autoDeploy: true
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_GROUP_ID
+        sync: false
+      - key: RCLONE_DEST
+        value: free_union:/telegram
+      - key: RCLONE_CONFIG_CONTENT
+        sync: false
+      - key: RCLONE_TPSLIMIT
+        value: "5"
+      - key: RCLONE_TRANSFERS
+        value: "2"
+      - key: RCLONE_CHECKERS
+        value: "4"

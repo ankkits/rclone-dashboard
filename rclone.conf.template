@@ -1,0 +1,58 @@
+# Fill tokens/credentials for each provider.
+# You can have MANY Google Drives or other remotes in one file (just create more blocks like [gdrive2], [gdrive3], etc.).
+# After editing, paste the entire content into Render env var: RCLONE_CONFIG_CONTENT
+
+[gdrive1]
+type = drive
+scope = drive
+# Optional but strongly recommended to avoid shared API limits:
+# client_id = YOUR_GOOGLE_OAUTH_CLIENT_ID
+# client_secret = YOUR_GOOGLE_OAUTH_CLIENT_SECRET
+# token = {"access_token":"...","token_type":"Bearer","refresh_token":"...","expiry":"..."}
+
+[dropbox1]
+type = dropbox
+# token = {"access_token":"..."}
+
+[onedrive1]
+type = onedrive
+# drive_type = personal
+# token = {"access_token":"...","refresh_token":"...","expiry":"..."}
+
+[box1]
+type = box
+# token = {"access_token":"...","refresh_token":"...","expiry":"..."}
+
+[pcloud1]
+type = pcloud
+# token = {"access_token":"...","token_type":"bearer","expiry":"..."}
+
+[koofr1]
+type = koofr
+# token = {"access_token":"...","refresh_token":"...","expiry":"..."}
+
+# Icedrive via WebDAV (enable WebDAV credentials in your Icedrive account)
+[icedrive1]
+type = webdav
+url = https://webdav.icedrive.io
+vendor = other
+# user = YOUR_EMAIL
+# pass = YOUR_WEBDAV_PASSWORD_OR_APP_TOKEN
+
+# Proton Drive (requires rclone with protondrive backend)
+[proton1]
+type = protondrive
+# token = {"uid":"...","refresh_token":"...","access_token":"...","expiry":"..."}
+
+# ---- UNION REMOTE (mounts all the above as one virtual drive) ----
+[free_union]
+type = union
+upstreams = gdrive1: dropbox1: onedrive1: box1: pcloud1: koofr1: icedrive1:
+# Spread new files to the remote with the MOST FREE space:
+create_policy = mfs
+# On conflicts (read/modify), prefer the first remote that has the path:
+action_policy = epff
+# When listing/searching, read from ALL (fastest-first):
+search_policy = ff
+# Optional: to avoid filling a small remote, pin a minimum free space per remote (e.g., 1G)
+# min_free_space = 1G

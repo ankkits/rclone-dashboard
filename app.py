@@ -11,6 +11,9 @@ from pathlib import Path
 
 # --- Helpers ---
 
+
+import os
+
 HERE = Path(__file__).parent.resolve()
 BIN_DIR = HERE / "bin"
 RCLONE_PATH = str(BIN_DIR / "rclone")
@@ -18,11 +21,15 @@ RCLONE_CONFIG_PATH = os.environ.get("RCLONE_CONFIG_PATH", str(HERE / "rclone.con
 RCLONE_DEST = os.environ.get("RCLONE_DEST", "free_union:/telegram")
 DOWNLOAD_DIR = Path(os.environ.get("DOWNLOAD_DIR", str(HERE / "downloads")))
 
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
-TELEGRAM_GROUP_ID = os.environ.get("TELEGRAM_GROUP_ID")  # expected as string (e.g., "-1001234567890")
+# Telegram config
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_TOKEN")  # matches Render var TELEGRAM_TOKEN
+TELEGRAM_GROUP_ID = os.environ.get("TELEGRAM_ALLOWED_CHAT_ID")  # e.g. "-1001234567890"
 
-RCLONE_USER = os.environ.get("RCLONE_USER", "admin")
-RCLONE_PASS = os.environ.get("RCLONE_PASS", "changeme")
+# Rclone config
+RCLONE_USER = os.environ.get("RCLONE_RC_USER", "admin")      # matches Render var RCLONE_RC_USER
+RCLONE_PASS = os.environ.get("RCLONE_RC_PASS", "changeme")   # matches Render var RCLONE_RC_PASS
+
+# Render port (Render assigns PORT automatically)
 PORT = int(os.environ.get("PORT", "8080"))
 
 def ensure_rclone_config_file():
